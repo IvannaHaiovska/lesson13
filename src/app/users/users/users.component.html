@@ -1,0 +1,9 @@
+<form name="form" #f="ngForm" novalidate class="mx-3 mt-3">
+  <input type="text" class="form-control" id="exampleInputName"  name="name" [(ngModel)]="newUser.username" #username="ngModel" required pattern="^[a-zA-Z]{1,20}$">
+  <button type="button" class="btn btn-success my-3" (click)="Add()" [disabled]="username.invalid">Add</button>
+  <button (click)="del()"></button>
+</form>
+
+<ul class="list-group mx-3 mt-3" >
+<li *ngFor="let item of users" class="list-group-item">{{item.username}}</li>
+</ul>
