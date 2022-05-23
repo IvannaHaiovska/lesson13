@@ -29,13 +29,7 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.userService.getAll().subscribe(res => {
       this.user = res;
-      console.log(res);
-       console.log(this.user);
-         this.LogUser = this.user[this.user.length - 1];
+         this.LogUser = this.user[this.user.length - 1];  
     });
-  
-   
-    
   }
-
 }

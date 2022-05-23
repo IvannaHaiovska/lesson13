@@ -9,13 +9,13 @@ import { IUser } from 'src/app/shared/interface/user/user';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-public users: Array<IUser> = [];
+  public users: Array<IUser> = [];
   public newUser = {
     username: '',
     email: '',
     password: '',
     created_at: '',
-      updated_at:''
+    updated_at: ''
   };
   public user: Array<IUser> = [];
   constructor(
@@ -23,13 +23,7 @@ public users: Array<IUser> = [];
   ) { }
 
   ngOnInit(): void {
-    this.userService.getAll().subscribe(res => {
-      this.user = res;
-      console.log(res);
-      
-    });
   }
-
   Submit(): void {
     const newUser = {
       id: 1,
@@ -39,10 +33,6 @@ public users: Array<IUser> = [];
       created_at: new Date,
       updated_at: new Date,
     }
-    this.userService.create(newUser).subscribe(res => {
-      // this.user = res;
-      console.log(res);
-      
-    });;
-}
+    this.userService.create(newUser).subscribe();
+  }
 }
