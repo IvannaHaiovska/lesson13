@@ -5,5 +5,4 @@ export interface IUser {
     created_at: Date,
     updated_at: Date,
     id: number,
-
 }

@@ -1,10 +1,11 @@
-const express = require("express");
+const express = require('express');
 const bodyParser = require('body-parser');
-
 const app = express();
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+const db = require("./src/backend/models");
+const User = db.users;
+localStrategy = require("passport-local");
+const passport = require('passport');
+var session = require('express-session');
 
 app.use(function (req, res, next) {
   res.header({
@@ -18,15 +19,39 @@ app.use(function (req, res, next) {
   // update to match the domain you will make the request from
   next();
 });
-const db = require("./src/backend/models");
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: false
+}));
+
+var auth = require('./src/backend/routes/auth');
 db.sequelize.sync();
 
+// passport config
+require('./src/backend/config/passport')
+// Express session
+app.use(
+  session({
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: true
+  })
+);
+
+// Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+//default route
+app.get('/', (req, res) => res.send('Hello my World'));
+
+app.use('/auth', auth);
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
 
-
-require("./src/backend/routes/user.routes")(app);
+require('./src/backend/routes/users')(app);
 app.listen();

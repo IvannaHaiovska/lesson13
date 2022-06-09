@@ -1,18 +1,112 @@
-<form name="form" #f="ngForm" novalidate>
-    <div class="text-center">
-      <h2>Sign Up</h2>
+<div class="row mt-5" *ngIf="chooseItem">
+  <div class="col-md-6 m-auto">
+    <div class="card card-body text-center">
+      <h1><i class="fab fa-node-js fa-3x"></i></h1>
+      <p>Create an account or login</p>
+      <input type="button" (click)="Register()" class="btn btn-danger my-3" value="Register">
+      <input type="button" (click)="Login()" class="btn btn-secondary" value="Login">
     </div>
-    <div name="myForm" class="body">
-      <label for="exampleInputName" class="form-label my-2">Name: </label>
-      <input type="text" class="form-control" id="exampleInputName"  name="name" [(ngModel)]="newUser.username" #name="ngModel" required pattern="^[a-zA-Z]{2,20}$">
-      <label for="exampleInputEmail" class="form-label my-2">Email:</label>
-      <input type="email"  class="form-control" id="exampleInputEmail" aria-describedby="emailHelp" name="email" #email="ngModel" pattern="^([a-zA-Z0-9_\.\-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$" [(ngModel)]="newUser.email" required>
-      <label for="exampleInputPassword1" class="form-label my-2">Password: </label>
-      <input type="password" class="form-control" id="exampleInputPassword1" name="password" #password="ngModel" required
-      autocomplete="on" pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])[a-zA-Z0-9]{6,15}$" [(ngModel)]="newUser.password">
+  </div>
+</div>
+
+<div class="col-md-12" *ngIf="register">
+  <div class="card card-container">
+    <img id="profile-img" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" class="profile-img-card" />
+    <form *ngIf="!isSuccessful" name="form" (ngSubmit)="f.form.valid && onRegister()" #f="ngForm" novalidate >
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" class="form-control" name="username" [(ngModel)]="form.username" required #username="ngModel"/>
+        <div class="alert-danger" *ngIf="username.errors && f.submitted">
+          <div *ngIf="username.errors['required']">Username is required</div>
+          <div *ngIf="username.errors['minlength']">
+            Username must be at least 3 characters
+          </div>
+          <div *ngIf="username.errors['maxlength']">
+            Username must be at most 20 characters
+          </div>
+        </div>
       </div>
-    <div class="bottom my-3">
-      <button type="button" class="btn btn-primary" (click)="Submit()" [disabled]="email.invalid && password.invalid" [routerLink]="'/dashboard'">Submit</button>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" class="form-control" name="email" [(ngModel)]="form.email" required email #email="ngModel" />
+        <div class="alert-danger" *ngIf="email.errors && f.submitted">
+          <div *ngIf="email.errors['required']">Email is required</div>
+          <div *ngIf="email.errors['email']">
+            Email must be a valid email address
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" class="form-control" name="password" [(ngModel)]="form.password" required
+          #password="ngModel" minlength="6" pattern="^[a-zA-Z0-9]{6,15}$"
+          autocomplete="on" />
+        <div class="alert-danger" *ngIf="password.errors && f.submitted">
+          <div *ngIf="password.errors['required']">Password is required</div>
+          <div *ngIf="password.errors['minlength']">
+            Password must be at least 6 characters
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="password2"> Confirm Password</label>
+        <input type="password" class="form-control" name="password2" [(ngModel)]="form.password2" required
+          #password2="ngModel" pattern="^[a-zA-Z0-9]{6,15}$" autocomplete="on" />
+        <div class="alert-danger" *ngIf="password2.errors && f.submitted">
+          <div *ngIf="password2.errors['required']">Password is required</div>
+          <div *ngIf="form.password2!=form.password">
+            Password do not match!
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <button class="btn btn-primary btn-block my-3">Register</button>
+      </div>
+      <div class="alert alert-warning" *ngIf="f.submitted && isSignUpFailed">
+        Signup failed!<br />{{ errorMessage }}
+      </div>
+    </form>
+    <p class="lead mt-4" *ngIf="changeLog">Have An Account? <a (click)="Login()"
+        class="text-decoration-underline">Login</a></p>
+
+    <p class="lead mt-4" *ngIf="isSuccessful"><a (click)="Login()" class="text-decoration-underline">Login</a></p>
+    <div class="alert alert-success" *ngIf="isSuccessful">
+      Your registration is successful! Please Login.
     </div>
-  </form>
-  
+  </div>
+</div>
+
+<div class="col-md-12" *ngIf="islogin">
+  <div class="card card-container">
+    <img id="profile-img" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" class="profile-img-card" />
+    <form name="form" (ngSubmit)="f.form.valid && onLogin()" #f="ngForm" novalidate>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" class="form-control" name="email" [(ngModel)]="form.email" required  #email="ngModel" email />
+        <div class="alert-danger" *ngIf="email.errors && f.submitted">
+          <div *ngIf="email.errors['required']">Email is required</div>
+          <div *ngIf="email.errors['email']">
+            Email must be a valid email address
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" class="form-control" name="password" [(ngModel)]="form.password" required
+          #password="ngModel" minlength="6"  autocomplete="on" />
+        <div class="alert-danger" *ngIf="password.errors && f.submitted">
+          <div *ngIf="password.errors['required']">Password is required</div>
+          <div *ngIf="password.errors['minlength']">
+            Password must be at least 6 characters
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary btn-block my-3">Login</button>
+      </div>
+    </form>
+    <p class="lead mt-4" *ngIf="islogin">
+      No Account? <a (click)="Register()" class="text-decoration-underline">Register</a>
+    </p>
+  </div>
+</div>

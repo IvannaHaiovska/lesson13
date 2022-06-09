@@ -5,9 +5,6 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   host: dbConfig.HOST,
   dialect: dbConfig.dialect,
   operatorsAliases: 0,
-  define: {
-    timestamps: false
-  },
 });
 
 const db = {};
@@ -15,6 +12,5 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-db.users = require("./user.model")(sequelize, Sequelize);
-
+db.users = require("./users")(sequelize, Sequelize);
 module.exports = db;

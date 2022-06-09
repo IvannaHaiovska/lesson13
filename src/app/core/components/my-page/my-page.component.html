@@ -1,1 +1,14 @@
+<ng-container *ngIf="!islogin">
+    <div class="card text-center">
+      <div class="card-header bg-danger">
+        Warning
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">You are not a registered user. Please log in</h5>
+        <button type="button" class="btn btn-success" [routerLink]="['/login']">Login</button>
+      </div>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="islogin">
 <p>my-page works!</p>
+</ng-container>

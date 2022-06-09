@@ -1,13 +1,11 @@
 module.exports = app => {
   const users = require("../controllers/user.controller");
-
   var router = require("express").Router();
 
+  // users
   router.post("/", users.create);
 
   router.get("/", users.findAll);
-
-  router.get("/:id", users.findOne);
 
   router.put("/:id", users.update);
 
@@ -15,5 +13,6 @@ module.exports = app => {
 
   router.delete("/", users.deleteAll);
 
-  app.use('/api/users', router);
+  app.use('/users', router);
+
 };

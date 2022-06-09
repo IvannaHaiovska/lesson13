@@ -1,12 +1,8 @@
 const db = require("../models");
 const User = db.users;
 const Op = db.Sequelize.Op;
-
-   const error= {
-  code: String,
-  description: String
-}
-
+const jwt = require('jsonwebtoken');
+const passport = require('passport');
 // Create and Save a new User
 exports.create = (req, res) => {
 
@@ -15,8 +11,10 @@ exports.create = (req, res) => {
     username: req.body.username,
     email: req.body.email,
     password: req.body.password,
+    password2: req.body.password2,
+    created_at: req.body.created_at,
+    updated_at: req.body.updated_at
   };
-
   // Save User in the database
   User.create(user)
     .then(data => {
@@ -24,10 +22,10 @@ exports.create = (req, res) => {
     })
     .catch(err => {
       res.send({
-        error:{
-        code: res.status,
-        description: err.message
-       }
+        error: {
+          code: res.status,
+          description: err.message
+        }
       })
     });
 };
@@ -35,38 +33,44 @@ exports.create = (req, res) => {
 // Retrieve all User from the database.
 exports.findAll = (req, res) => {
   const title = req.query.title;
-  var condition = title ? { title: { [Op.like]: `%${title}%` } } : null;
+  var condition = title ? {
+    title: {
+      [Op.like]: `%${title}%`
+    }
+  } : null;
 
-  User.findAll({ where: condition })
+  User.findAll({
+      where: condition
+    })
     .then(data => {
       res.send(data);
     })
     .catch(err => {
       res.send({
-        error:{
-        code: res.status,
-        description: err.message
-       }
+        error: {
+          code: res.status,
+          description: err.message
+        }
       })
     });
 };
 
-// Find a single User with an id
+// // Find a single User with an id
 exports.findOne = (req, res) => {
   const id = req.params.id;
 
-  User.findByiD(id)
+  User.findByPk(id)
     .then(data => {
-      if(data){
-         res.send(data);
+      if (data) {
+        res.send(data);
       }
     })
     .catch(err => {
       res.send({
-        error:{
-        code: res.status,
-        description: err.message
-       }
+        error: {
+          code: res.status,
+          description: err.message
+        }
       })
     });
 };
@@ -76,8 +80,10 @@ exports.update = (req, res) => {
   const id = req.params.id;
 
   User.update(req.body, {
-    where: { id: id }
-  })
+      where: {
+        id: id
+      }
+    })
     .then(num => {
       if (num == 1) {
         res.send();
@@ -85,10 +91,10 @@ exports.update = (req, res) => {
     })
     .catch(err => {
       res.send({
-        error:{
-        code: res.status,
-        description: err.message
-       }
+        error: {
+          code: res.status,
+          description: err.message
+        }
       })
     });
 };
@@ -98,8 +104,10 @@ exports.delete = (req, res) => {
   const id = req.params.id;
 
   User.destroy({
-    where: { id: id }
-  })
+      where: {
+        id: id
+      }
+    })
     .then(num => {
       if (num == 1) {
         res.send();
@@ -107,10 +115,10 @@ exports.delete = (req, res) => {
     })
     .catch(err => {
       res.send({
-        error:{
-        code: res.status,
-        description: err.message
-       }
+        error: {
+          code: res.status,
+          description: err.message
+        }
       })
     });
 };
@@ -118,34 +126,40 @@ exports.delete = (req, res) => {
 // Delete all User from the database.
 exports.deleteAll = (req, res) => {
   User.destroy({
-    where: {},
-    truncate: false
-  })
+      where: {},
+      truncate: false
+    })
     .then(nums => {
-      res.send({ message: `${nums} Users were deleted successfully!` });
+      res.send({
+        message: `${nums} Users were deleted successfully!`
+      });
     })
     .catch(err => {
       res.send({
-        error:{
-        code: res.status,
-        description: err.message
-       }
+        error: {
+          code: res.status,
+          description: err.message
+        }
       })
     });
 };
 
 // find all published User
 exports.findAllPublished = (req, res) => {
-  User.findAll({ where: { published: true } })
+  User.findAll({
+      where: {
+        published: true
+      }
+    })
     .then(data => {
       res.send(data);
     })
     .catch(err => {
       res.send({
-        error:{
-        code: res.status,
-        description: err.message
-       }
+        error: {
+          code: res.status,
+          description: err.message
+        }
       })
     });
 };

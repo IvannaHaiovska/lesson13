@@ -2,5 +2,12 @@ form{
     width: 40%;
 }
 ul{
-    width: 60%;
+    width: 50%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    list-style-type: none;
+}
+.list-group-item{
+    width: 80%;
 }

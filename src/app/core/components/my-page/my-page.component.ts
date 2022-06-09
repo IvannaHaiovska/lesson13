@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { StorageService } from 'src/app/shared/service/storage/storage.service';
 
 @Component({
   selector: 'app-my-page',
@@ -6,10 +7,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./my-page.component.css']
 })
 export class MyPageComponent implements OnInit {
-
-  constructor() { }
+  public islogin!:boolean;
+  constructor(  private storageService: StorageService) { }
 
   ngOnInit(): void {
+    this.islogin = this.storageService.isLoggedIn();
   }
 
 }
