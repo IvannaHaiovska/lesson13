@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 import { UsersService } from 'src/app/shared/service/users/users.service';
 import { IUser } from 'src/app/shared/interface/user/user';
@@ -19,40 +20,62 @@ export class UsersComponent implements OnInit {
     username: '',
     email: '',
     password: '',
-    created_at: '',
-    updated_at: ''
+    entitlements: '',
+    createdAt: '',
+    updatedAt: ''
   };
-  public islogin!: boolean;
   public edit = false;
-  public ifAdmin = false;
+  public canEdit = false;
+  public canDelete = false;
+  public isLogUser!: boolean;
   public updateIndex!: number;
-  public LogUser = {
-    username: '',
-    email: ''
-  };
+  public log: any;
+  public LogUser!: IUser;
 
   constructor(
     private userService: UsersService,
     private notifyService: NotifyService,
+    private router: Router,
     private storageService: StorageService
   ) {
   }
   ngOnInit(): void {
-    this.GetUser();
-    this.islogin = this.storageService.isLoggedIn();
+    this.GetUsers();
+    this.GetLoginUser()
   }
 
-  GetUser() {
+  GetUsers() {
     this.userService.getAll().subscribe(res => {
       this.users = res;
-      this.LogUser = this.users[this.users.length - 1];
-      if (this.LogUser.username === 'admin') {
-        this.ifAdmin = true;
-      }
-      else {
-        this.ifAdmin = false;
-      }
     });
+
+  }
+
+  GetLoginUser() {
+    this.log = this.storageService.getUser();
+    this.LogUser = this.log.user;
+
+    if ((this.LogUser.entitlements === 'can_edit_users') || (this.LogUser.entitlements === 'can_view_details_full') || (this.LogUser.entitlements === 'can_edit_users_full') || (this.LogUser.username === 'admin')) {
+      this.canEdit = true;
+    }
+    else {
+      this.canEdit = false;
+    }
+    if ((this.LogUser.entitlements === 'can_delete_users') || (this.LogUser.entitlements === 'can_view_details_full') || (this.LogUser.entitlements === 'can_edit_users_full') || (this.LogUser.username === 'admin')) {
+      this.canDelete = true;
+    }
+    else {
+      this.canDelete = false;
+    }
+  }
+
+  detail(index: number) {
+    if ((this.LogUser.email === this.users[index].email) || (this.LogUser.entitlements === 'can_view_details') || (this.LogUser.entitlements === 'can_view_details_full') || (this.LogUser.entitlements === 'can_edit_users_full') || (this.LogUser.username === 'admin')) {
+      this.router.navigate([`users/${this.users[index].id}`]);
+    }
+    else {
+      alert("You do not have access rights!")
+    }
   }
 
   Add(): void {
@@ -62,11 +85,12 @@ export class UsersComponent implements OnInit {
         username: this.newUser.username,
         email: `${this.newUser.username}@gmail.com`,
         password: this.newUser.username,
-        created_at: new Date,
-        updated_at: new Date,
+        entitlements: 'can_view_users',
+        createdAt: new Date,
+        updatedAt: new Date,
       }
       this.userService.create(newUser).subscribe(() => {
-        this.GetUser();
+        this.GetUsers();
       });
       this.notifyService.showSuccess('User create', 'Success!');
     }
@@ -84,6 +108,7 @@ export class UsersComponent implements OnInit {
   DeleteUser(index: any) {
     this.userService.delete(this.users[index].id).subscribe((res) => {
       this.users.splice(index, 1);
+      this.notifyService.showSuccess('User delete', 'Success!');
     });
   }
   SaveEdit() {
@@ -92,8 +117,9 @@ export class UsersComponent implements OnInit {
       username: this.newUser.username,
       email: this.users[this.updateIndex].email,
       password: this.users[this.updateIndex].password,
-      created_at: new Date,
-      updated_at: new Date,
+      entitlements: 'can_view_users',
+      createdAt: this.users[this.updateIndex].createdAt,
+      updatedAt: new Date,
     }
     this.userService.update(this.users[this.updateIndex].id, newUser).subscribe(() => {
       this.users[this.updateIndex].username = newUser.username;

@@ -13,7 +13,7 @@ const httpOptions = {
 })
 export class AuthService {
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   login(email: string, password: string): Observable<any> {
     return this.http.post(
@@ -25,13 +25,8 @@ export class AuthService {
     );
   }
 
-  // register(data:IUser): Observable<any> {
-  //   return this.http.post(
-  //     AUTH_API + 'signup',data);
-  // }
-
   logout(): Observable<any> {
-    return this.http.post(AUTH_API + 'signout', { },
-    httpOptions);
+    return this.http.post(AUTH_API + 'signout', {},
+      httpOptions);
   }
 }

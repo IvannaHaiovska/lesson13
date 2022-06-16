@@ -20,8 +20,8 @@ export class DashboardComponent implements OnInit {
     username: '',
     email: ''
   };
+  public log: any;
   public users: Array<IUser> = [];
-  public islogin!: boolean;
 
   constructor(
     private userService: UsersService,
@@ -31,10 +31,12 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.userService.getAll().subscribe(res => {
       this.users = res;
-      this.LogUser = this.users[this.users.length - 1];
     });
-
-    this.islogin = this.storageService.isLoggedIn();
+    this.GetLoginUser();
+  }
+  GetLoginUser() {
+    this.log = this.storageService.getUser();
+    this.LogUser = this.log.user;
   }
 
   LogOut() {

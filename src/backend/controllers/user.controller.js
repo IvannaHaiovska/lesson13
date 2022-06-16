@@ -12,6 +12,7 @@ exports.create = (req, res) => {
     email: req.body.email,
     password: req.body.password,
     password2: req.body.password2,
+    entitlements:req.body.entitlements,
     created_at: req.body.created_at,
     updated_at: req.body.updated_at
   };

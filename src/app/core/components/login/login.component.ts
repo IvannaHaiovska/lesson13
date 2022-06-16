@@ -16,8 +16,9 @@ export class LoginComponent implements OnInit {
     email: null,
     password: null,
     password2: null,
-    created_at: new Date,
-    updated_at: new Date
+    entitlements: null,
+    createdAt: new Date,
+    updatedAt: new Date
   };
   isSuccessful = false;
   isSignUpFailed = false;
@@ -51,10 +52,15 @@ export class LoginComponent implements OnInit {
       username: this.form.username,
       email: this.form.email,
       password: this.form.password,
-      created_at: new Date,
-      updated_at: new Date,
+      entitlements: 'can_view_users',
+      createdAt: new Date,
+      updatedAt: new Date,
+    }
+    if (newUser.username === 'admin') {
+      newUser.entitlements = 'can_edit_users_full'
     }
     this.changeLog = false;
+
     this.usersService.create(newUser).subscribe({
       next: data => {
         this.isSuccessful = true;
@@ -75,6 +81,7 @@ export class LoginComponent implements OnInit {
 
   onLogin() {
     const { email, password } = this.form;
+
     this.authService.login(email, password).subscribe({
       next: data => {
         this.storageService.saveUser(data);

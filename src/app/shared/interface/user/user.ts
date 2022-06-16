@@ -2,7 +2,8 @@ export interface IUser {
     username: string,
     email: string,
     password: string,
-    created_at: Date,
-    updated_at: Date,
+    entitlements:string,
+    createdAt: Date,
+    updatedAt: Date,
     id: number,
 }

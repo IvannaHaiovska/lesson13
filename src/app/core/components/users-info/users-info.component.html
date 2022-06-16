@@ -1,11 +1,21 @@
-<ng-container *ngIf="!islogin">
-    <div class="card text-center">
-      <div class="card-header bg-danger">
-        Warning
-      </div>
-      <div class="card-body">
-        <h5 class="card-title">You are not a registered user. Please log in</h5>
-        <button type="button" class="btn btn-success" [routerLink]="['/login']">Login</button>
-      </div>
+<p (click)="back()" class="mt-3 ms-3">
+  << Back</p> <div class="card" style="width: 20rem;">
+    <img id="profile-img" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" class="profile-img-card">
+    <h5 class="card-header" *ngIf="!isEdit">Username: {{user.username}}</h5>
+    <input *ngIf="isEdit" type="text" class="form-control" id="exampleInputName" name="name"
+      [(ngModel)]="newUser.username" #username="ngModel" required pattern="^[a-zA-Z]{1,20}$">
+    <div class="card-body">
+      <p class="card-title"><b>Email:</b> {{user.email}}</p>
+      <p class="card-text"><b>Password:</b> {{hidePassword}}</p>
+      <p class="card-text" *ngIf="fullDetail"><b>Entitlements:</b> {{user.entitlements}}</p>
+      <select *ngIf="edit" class="form-select mb-2" aria-label="Default select example" [(ngModel)]="selectedValue">
+        <option *ngFor="let item of entitlements" [ngValue]="item.name">{{item.name}}</option>
+      </select>
+      <p class="card-text"><b>Created at:</b> {{user.createdAt | date: 'HH:mm, dd.MM.YYYY'}}</p>
+      <p class="card-text"><b>Updated at:</b> {{user.updatedAt | date: 'HH:mm, dd.MM.YYYY'}}</p>
     </div>
-  </ng-container>
+    <div class="card-footer text-muted">
+      <button type="button" class="btn btn-warning mx-5" (click)="Edit()" *ngIf="iFedit">Edit</button>
+      <button type="button" class="btn btn-success" (click)="Save()" [disabled]="!isEdit" *ngIf="iFedit">Save</button>
+    </div>
+    </div>

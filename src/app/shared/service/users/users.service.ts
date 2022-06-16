@@ -19,7 +19,7 @@ export class UsersService {
   getAll(): Observable<IUser[]> {
     return this.http.get<IUser[]>(baseUrl);
   }
-  get(id: number): Observable<IUser> {
+  getOne(id: number): Observable<IUser> {
     return this.http.get<IUser>(`${baseUrl}/${id}`);
   }
   create(data: IUser) {

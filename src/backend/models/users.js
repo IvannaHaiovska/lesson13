@@ -12,6 +12,10 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
       required: true
     },
+    entitlements: {
+      type: Sequelize.STRING,
+      defaultValue: "can_view_users"
+    },
     createdAt: {
       allowNull: false,
       defaultValue: new Date,

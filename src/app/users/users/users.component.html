@@ -1,15 +1,4 @@
-<ng-container *ngIf="!islogin">
-  <div class="card text-center">
-    <div class="card-header bg-danger">
-      Warning
-    </div>
-    <div class="card-body">
-      <h5 class="card-title">You are not a registered user. Please log in</h5>
-      <button type="button" class="btn btn-success" [routerLink]="['/login']">Login</button>
-    </div>
-  </div>
-</ng-container>
-<ng-container *ngIf="islogin">
+<p class="mt-3 ms-3" [routerLink]="['/dashboard']"><< Back</p>
 <form name="form" #f="ngForm" novalidate class="mx-3 mt-3">
   <input type="text" class="form-control" id="exampleInputName"  name="name" [(ngModel)]="newUser.username" #username="ngModel" required pattern="^[a-zA-Z]{1,20}$">
   <button type="button" class="btn btn-success my-3" (click)="Add()" [disabled]="username.invalid" *ngIf="!edit">Add</button>
@@ -17,8 +6,8 @@
 </form>
 
 <ul class="list-group mx-3 mt-3" *ngFor="let item of users; index as i" >
-<li class="list-group-item">{{item.username}}</li>
-<li><button type="button" class = "btn btn-warning" (click)="EditUser(i)" *ngIf="ifAdmin">Edit</button></li>
-<li><button type="button" class = "btn btn-danger" (click)="DeleteUser(i)" *ngIf="ifAdmin">Delete</button></li>
+<li class="list-group-item">{{item.username}}, {{item.email}}</li>
+<li><button type="button" class = "btn btn-warning ms-3" (click)="detail(i)">Details</button></li>
+<li><button type="button" class = "btn btn-warning ms-3" (click)="EditUser(i)" *ngIf="canEdit">Edit</button></li>
+<li><button type="button" class = "btn btn-danger ms-3" (click)="DeleteUser(i)" *ngIf="canDelete">Delete</button></li>
 </ul>
-</ng-container>
